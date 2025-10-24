@@ -43,5 +43,6 @@ Once the user clicks **Generate**, the app:
 - Learn how to integrate **open-source LLMs** into web apps  
 - Experiment with **prompt engineering** using LangChain  
 
+
 ---
 
