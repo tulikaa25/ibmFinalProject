@@ -21,7 +21,7 @@ Once the user clicks **Generate**, the app:
 
 ## 🧩 Tech Stack
 
-- **Python** 🐍  
+- **Python** 
 - **Streamlit** – for the interactive web UI  
 - **LangChain** – for prompt management and LLM orchestration  
 - **CTransformers** – for loading and running the LLaMA 2 model locally  
