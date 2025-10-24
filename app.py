@@ -1,19 +1,23 @@
 import streamlit as st
 from langchain.prompts import PromptTemplate
-from langchain.llms import CTransformers
+from langchain_groq import ChatGroq
+from dotenv import load_dotenv
+import os
 
-## Function To get response from LLAma 2 model
+load_dotenv()
+api_key = os.getenv("GROQ_API_KEY")
 
-def getLLamaresponse(input_text,no_words,blog_style):
+## Function To get response from LLAma 3 model
 
-    ### LLama2 model
-    llm=CTransformers(model='model/llama-2-7b-chat.ggmlv3.q2_K.bin',
-                      model_type='llama',
-                      config={'max_new_tokens':256,
-                              'temperature':0.01})
+def getGroqResponse(input_text,no_words,blog_style):
 
-
-    
+    ### LLama3 model
+        llm = ChatGroq(
+        model="llama3-70b-8192",       
+        api_key=api_key,   
+        temperature=0.01,
+        max_tokens=256
+    )
     ## Prompt Template
 
     template="""
@@ -24,15 +28,15 @@ def getLLamaresponse(input_text,no_words,blog_style):
     prompt=PromptTemplate(input_variables=["blog_style","input_text",'no_words'],
                           template=template)
     
-    ## Generate the ressponse from the LLama 2 model
-    response=llm(prompt.format(blog_style=blog_style,input_text=input_text,no_words=no_words))
+   
+    response=llm.invoke(prompt.format(blog_style=blog_style,input_text=input_text,no_words=no_words))
     print(response)
     return response
 
 
 
 
-
+# Streamlit App UI
 
 st.set_page_config(page_title="Generate Blogs",
                     page_icon='🤖',
@@ -43,7 +47,7 @@ st.header("Generate Blogs 🤖")
 
 input_text=st.text_input("Enter the Blog Topic")
 
-## creating to more columns for additonal 2 fields
+## creating two more columns for additonal 2 fields
 
 col1,col2=st.columns([5,5])
 
@@ -57,4 +61,10 @@ submit=st.button("Generate")
 
 ## Final response
 if submit:
-    st.write(getLLamaresponse(input_text,no_words,blog_style))
+    if not input_text.strip():
+        st.warning("⚠️ Please enter a blog topic before generating.")
+    else:
+        st.write(" Generating blog... please wait...")
+        response = getGroqResponse(input_text, no_words, blog_style)
+        st.subheader("✨ Generated Blog:")
+        st.write(response)
